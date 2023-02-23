@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"greenlight.adi.net/internal/validator"
 	"time"
 
 	"github.com/jackc/pgx/v4/pgxpool"
@@ -152,18 +153,24 @@ type Manga struct {
 	Version  int32   `json:"version"`
 }
 
-/*
-func ValidateMovie(v *validator.Validator, movie *Movie) {
-	v.Check(movie.Title != "", "title", "must be provided")
-	v.Check(len(movie.Title) <= 500, "title", "must not be more than 500 bytes long")
-	v.Check(movie.Year != 0, "year", "must be provided")
-	v.Check(movie.Year >= 1888, "year", "must be greater than 1888")
-	v.Check(movie.Year <= int32(time.Now().Year()), "year", "must not be in the future")
-	v.Check(movie.Runtime != 0, "runtime", "must be provided")
-	v.Check(movie.Runtime > 0, "runtime", "must be a positive integer")
-	v.Check(movie.Genres != nil, "genres", "must be provided")
-	v.Check(len(movie.Genres) >= 1, "genres", "must contain at least 1 genre")
-	v.Check(len(movie.Genres) <= 5, "genres", "must not contain more than 5 genres")
-	v.Check(validator.Unique(movie.Genres), "genres", "must not contain duplicate values")
+func ValidateManga(v *validator.Validator, manga *Manga) {
+	v.Check(manga.Title != "", "title", "title must be provided")
+	v.Check(len(manga.Title) <= 500, "title", "title must not be more than 500 bytes long")
+
+	v.Check(manga.Studio != "", "studio", "studio must be provided")
+	v.Check(len(manga.Studio) <= 200, "studio", "studio must not be more than 200 bytes long")
+
+	v.Check(manga.Year != 0, "year", "year must be provided")
+	v.Check(manga.Year >= 1900, "year", "year must be greater than 1900")
+	v.Check(manga.Year <= int32(time.Now().Year()), "year", "year must not be in the future")
+
+	v.Check(manga.Chapters != 0, "chapters", "must be at least 1 chapter")
+	v.Check(manga.Chapters < 2000, "chapters", "the maximum chapter limit has been reached")
+
+	//v.Check(manga.Version != 0, "version", "version must be provided")
+
+	v.Check(manga.Rating >= 1.0, "rating", "the minimum rating limit has been reached")
+	v.Check(manga.Rating <= 5.0, "rating", "the maximum rating limit has been reached")
+
+	// v.Check(validator.Unique(manga.Title), "genres", "must not contain duplicate values")
 }
-*/
