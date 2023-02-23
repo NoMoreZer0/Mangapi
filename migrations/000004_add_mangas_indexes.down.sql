@@ -1,0 +1,1 @@
+DROP INDEX IF EXISTS manga_title_idx;

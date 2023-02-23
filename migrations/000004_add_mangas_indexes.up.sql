@@ -1,0 +1,1 @@
+CREATE INDEX IF NOT EXISTS manga_title_idx ON mangas USING GIN (to_tsvector('simple', title));
