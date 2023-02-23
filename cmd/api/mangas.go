@@ -3,8 +3,9 @@ package main
 import (
 	"errors"
 	"fmt"
-	"greenlight.adi.net/internal/validator"
 	"net/http"
+
+	"greenlight.adi.net/internal/validator"
 
 	"greenlight.adi.net/internal/data"
 )
@@ -126,14 +127,13 @@ func (app *application) updateMangaHandler(w http.ResponseWriter, r *http.Reques
 	if input.Rating != nil {
 		manga.Rating = *input.Rating
 	}
-	/*
-		v := validator.New()
+	v := validator.New()
 
-		if data.ValidateMovie(v, movie); !v.Valid() {
-			app.failedValidationResponse(w, r, v.Errors)
-			return
-		}
-	*/
+	if data.ValidateManga(v, manga); !v.Valid() {
+		app.failedValidationResponse(w, r, v.Errors)
+		return
+	}
+
 	err = app.models.Mangas.Update(manga)
 	if err != nil {
 		switch {

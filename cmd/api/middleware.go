@@ -20,8 +20,7 @@ func (app *application) rateLimit(next http.Handler) http.Handler {
 		lastSeen time.Time
 	}
 	var (
-		mu sync.Mutex
-		// Update the map so the values are pointers to a client struct.
+		mu      sync.Mutex
 		clients = make(map[string]*client)
 	)
 
