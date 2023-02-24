@@ -4,8 +4,9 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-	"greenlight.adi.net/internal/validator"
 	"time"
+
+	"greenlight.adi.net/internal/validator"
 
 	"github.com/jackc/pgx/v4/pgxpool"
 )
@@ -167,10 +168,7 @@ func ValidateManga(v *validator.Validator, manga *Manga) {
 	v.Check(manga.Chapters != 0, "chapters", "must be at least 1 chapter")
 	v.Check(manga.Chapters < 2000, "chapters", "the maximum chapter limit has been reached")
 
-	//v.Check(manga.Version != 0, "version", "version must be provided")
-
 	v.Check(manga.Rating >= 1.0, "rating", "the minimum rating limit has been reached")
 	v.Check(manga.Rating <= 5.0, "rating", "the maximum rating limit has been reached")
 
-	// v.Check(validator.Unique(manga.Title), "genres", "must not contain duplicate values")
 }

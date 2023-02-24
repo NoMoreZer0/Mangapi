@@ -2,7 +2,6 @@ package data
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/jackc/pgx/v4/pgxpool"
@@ -33,13 +32,10 @@ func (m PermissionModel) GetAllForUser(userID int64) (Permissions, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	fmt.Println(userID)
 	rows, err := conn.Query(ctx, "SELECT permissions.code FROM permissions INNER JOIN users_permissions ON users_permissions.permission_id = permissions.id INNER JOIN users ON users_permissions.user_id = users.id WHERE users.id = $1", userID)
 	if err != nil {
 		return nil, err
 	}
-
-	fmt.Println("ok1")
 
 	defer rows.Close()
 
@@ -54,13 +50,9 @@ func (m PermissionModel) GetAllForUser(userID int64) (Permissions, error) {
 		permissions = append(permissions, permission)
 	}
 
-	fmt.Println("ok2")
-
 	if err = rows.Err(); err != nil {
 		return nil, err
 	}
-
-	fmt.Println("ok3")
 
 	return permissions, nil
 }
